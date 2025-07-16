@@ -45,6 +45,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest
-            docker ps -q --filter "publish=3000" | xargs -r docker stop
-            docker ps -a -q --filter "publish=3000" | xargs -r docker rm
+
+            # 🛑 Stop and remove "myapp" if it exists
+             docker rm -f myapp || true
+
+             # ✅ Run the new container
             docker run -d --name myapp -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest
